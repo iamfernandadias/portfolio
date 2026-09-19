@@ -230,20 +230,6 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
 .rodape a:hover{text-decoration:underline}
 .rodape small{opacity:.7}
 
-/* Card de captura */
-.fundo{position:fixed;inset:0;z-index:100;background:rgba(35,31,32,.65);display:flex;align-items:center;justify-content:center;padding:20px}
-.fundo[hidden]{display:none}
-.card-cap{position:relative;background:var(--bg);color:var(--ink);border-radius:var(--raio-g);box-shadow:var(--sombra-g);padding:36px 30px 30px;width:100%;max-width:440px;max-height:calc(100vh - 40px);overflow:auto}
-.card-cap h2{font-size:1.9rem;padding-right:34px}
-.card-cap p{color:var(--soft);margin-bottom:18px}
-.card-cap label{display:block;font-weight:800;font-size:.85rem;margin-bottom:6px}
-.card-cap input{width:100%;font:inherit;padding:14px 16px;border:1px solid var(--linha);border-radius:14px;background:#fff;color:var(--ink);margin-bottom:16px}
-.card-cap input:focus{outline:3px solid var(--rosa-esc);outline-offset:1px}
-.card-cap .confirma{background:var(--rosa-claro);border-color:transparent;color:var(--rosa-esc)}
-.fechar{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:var(--bg2);font-size:1.3rem;cursor:pointer;font-weight:800}
-.fechar:hover{background:var(--rosa-claro)}
-.card-cap .btn{width:100%}
-
 /* Entrada ao rolar */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .reveal.on{opacity:1;transform:none}
@@ -485,24 +471,6 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
   </div>
 </footer>
 
-<!-- CARD DE CAPTURA -->
-<div class="fundo" id="fundo" hidden>
-  <div class="card-cap" role="dialog" aria-modal="true" aria-labelledby="cap-titulo">
-    <button class="fechar" id="fechar" aria-label="Fechar">×</button>
-    <div id="cap-conteudo">
-      <h2 id="cap-titulo">Quer meu mídia kit <em>completo</em>?</h2>
-      <p>Deixe seu nome e e-mail que eu envio para você.</p>
-      <form id="form-cap" novalidate>
-        <label for="c-nome">Nome</label>
-        <input id="c-nome" type="text" autocomplete="name" required>
-        <label for="c-email">E-mail</label>
-        <input id="c-email" type="email" autocomplete="email" required>
-        <button class="btn btn-rosa" type="submit">Quero receber</button>
-      </form>
-    </div>
-    <div class="confirma" id="cap-ok" role="status" hidden></div>
-  </div>
-</div>
 
 <script>
 /* ==========================================================
@@ -744,35 +712,7 @@ $("#form").addEventListener("submit", e => {
   ok.hidden = false; f.hidden = true; ok.setAttribute("tabindex","-1"); ok.focus();
 });
 
-/* Card de captura: aparece após 7 segundos, uma vez por visita */
-const fundo = $("#fundo");
-let foco = null;
-function abrirCard(){
-  foco = document.activeElement;
-  fundo.hidden = false;
-  try { sessionStorage.setItem("cardVisto","1"); } catch(e){}
-  $("#c-nome").focus();
-}
-function fecharCard(){
-  fundo.hidden = true;
-  if (foco && foco.focus) foco.focus();
-}
-let jaVisto = false;
-try { jaVisto = sessionStorage.getItem("cardVisto") === "1"; } catch(e){}
-if (!jaVisto) setTimeout(abrirCard, 7000);
-$("#fechar").addEventListener("click", fecharCard);
-fundo.addEventListener("click", e => { if (e.target === fundo) fecharCard(); });
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") { if (!fundo.hidden) fecharCard(); fecharMenu(); }
-});
-$("#form-cap").addEventListener("submit", e => {
-  e.preventDefault();
-  const f = e.target;
-  if (!f.checkValidity()) { f.reportValidity(); return; }
-  const ok = $("#cap-ok");
-  ok.textContent = "Pronto! Vou enviar meu mídia kit para o seu e-mail.";
-  ok.hidden = false; $("#cap-conteudo").hidden = true; ok.setAttribute("tabindex","-1"); ok.focus();
-});
+document.addEventListener("keydown", e => { if (e.key === "Escape") fecharMenu(); });
 </script>
 </body>
 </html>
