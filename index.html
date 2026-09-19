@@ -83,11 +83,12 @@ h1 em,h2 em{font-size:1.1em}
 .ph{position:relative;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding:18px;color:#fff;font-weight:700;font-size:.85rem;background:linear-gradient(150deg,#cb6694,#e6b3cc 55%,#ebf094);border-radius:var(--raio-g);overflow:hidden;box-shadow:var(--sombra-g)}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ph small{position:relative;background:rgba(35,31,32,.85);padding:5px 12px;border-radius:999px;font-size:.78rem}
-.foto-capa .ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:56%;background:linear-gradient(to top,rgba(35,31,32,.82),rgba(35,31,32,0));z-index:1}
-.comentarios{position:absolute;z-index:3;left:22px;bottom:22px;width:min(62%,280px);display:grid;gap:12px}
-.coment{display:flex;align-items:flex-start;gap:8px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.55);font-size:.82rem;line-height:1.35}
-.coment i{flex:none;color:var(--rosa);font-style:normal;font-size:1rem;line-height:1.2;text-shadow:none}
-.coment strong{font-weight:800}
+.flutua{position:absolute;z-index:3;max-width:215px;margin:0;background:var(--lima);color:var(--ink);border-radius:16px 16px 16px 4px;padding:9px 14px;font-size:.78rem;line-height:1.4;box-shadow:0 6px 18px rgba(35,31,32,.12);opacity:0;animation:pop 14s ease-in-out infinite both}
+.flutua strong{font-weight:800}
+.flutua.a{right:-7%;top:8%;animation-delay:.6s}
+.flutua.b{left:-9%;top:46%;animation-delay:3.4s;border-radius:16px 16px 4px 16px}
+.flutua.c{right:-7%;bottom:9%;animation-delay:6.2s}
+@keyframes pop{0%{opacity:0;transform:translateY(14px) scale(.94)}4%,74%{opacity:1;transform:none}82%,100%{opacity:0;transform:translateY(-8px) scale(.98)}}
 
 /* Faixa em movimento */
 .faixa{background:var(--ink);color:#fff;overflow:hidden;padding-block:16px;margin-top:56px;position:relative;z-index:2}
@@ -194,19 +195,13 @@ section.stats-sec{padding-block:40px 24px}
 .serv p{color:var(--soft);font-size:.92rem}
 
 /* Depoimentos */
-.depo-topo{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:56px}
+.depo-topo{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:32px}
 .depo-topo p{color:var(--soft);max-width:34ch;font-size:.9rem}
-.depoimentos{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:44px 4px 8px}
+.depoimentos{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 4px 8px;align-items:flex-start}
 .depoimentos::-webkit-scrollbar{display:none}
-.depo{flex:none;width:min(320px,80%);scroll-snap-align:center;position:relative;background:var(--bg);border:1px solid var(--linha);border-radius:var(--raio);padding:44px 22px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
-.avatar{position:absolute;top:-38px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;background:linear-gradient(150deg,var(--rosa),var(--lima));color:var(--ink);font-weight:800;font-size:1.2rem;display:grid;place-items:center;border:4px solid var(--bg);box-shadow:var(--sombra)}
-.depo strong.nome{font-size:1rem;letter-spacing:-.01em}
-.estrelas{color:var(--rosa);letter-spacing:2px;font-size:.95rem}
-.depo .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
-.depo blockquote{color:var(--soft);font-size:.95rem;line-height:1.5;flex:1}
-.depo .fim{width:100%;border-top:1px solid var(--linha);padding-top:10px;margin-top:6px}
-.depo .fim b{display:block;color:var(--rosa-esc);font-size:1.2rem;line-height:1.1}
-.depo .fim span{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--soft);font-weight:700}
+.depo{flex:none;width:min(300px,80%);scroll-snap-align:center;margin:0}
+.depo p{background:var(--lima);color:var(--ink);border-radius:18px 18px 18px 5px;padding:14px 18px;font-size:.95rem;line-height:1.5;box-shadow:0 6px 18px rgba(35,31,32,.08)}
+.depo strong{font-weight:800}
 .depo-setas{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
 
 /* Contato */
@@ -268,7 +263,8 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
   .menu a{display:block;padding:14px 4px;font-size:.8rem}
   .capa-grade,.sobre-grade,.contato-grade{grid-template-columns:1fr;gap:40px}
   .foto-capa{max-width:380px}
-  .comentarios{left:16px;bottom:16px;width:70%;gap:9px}
+  .flutua{max-width:165px;font-size:.72rem;padding:7px 11px}
+  .flutua.a{right:0;top:5%}.flutua.b{left:0;top:48%}.flutua.c{right:0;bottom:5%}
   .destaques{grid-template-columns:1fr;max-width:380px;margin-inline:auto}
   .resultados,.usos{grid-template-columns:1fr}
 }
@@ -279,7 +275,6 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
   .servicos{grid-template-columns:1fr}
   .dupla{grid-template-columns:1fr}
   .passo{grid-template-columns:48px 1fr;padding:20px}
-  .coment{font-size:.76rem}
   .linha-topo .setas{display:none}
   .produto{width:200px}
 }
@@ -287,6 +282,7 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
   html{scroll-behavior:auto}
   *{transition:none!important;animation:none!important}
   .reveal{opacity:1;transform:none}
+  .flutua{opacity:1}
   .faixa{overflow-x:auto}
 }
 </style>
@@ -330,12 +326,10 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
     <div class="foto-capa reveal">
       <!-- TROCAR A FOTO: substitua o arquivo fotos/capa.jpg (formato ideal 4:5) ou mude o caminho no src. -->
       <div class="ph"><img src="fotos/capa.jpg" alt="Fernanda Dias em Londres, sentada em um muro com o Big Ben ao fundo" width="1120" height="1400" fetchpriority="high"></div>
-      <!-- Comentários de clientes (sempre visíveis). A primeira frase fica em negrito (strong), a segunda normal. -->
-      <div class="comentarios">
-        <p class="coment"><i aria-hidden="true">♥</i><span><strong>Amei demais, de verdade.</strong> Superou minhas expectativas.</span></p>
-        <p class="coment"><i aria-hidden="true">♥</i><span><strong>Foi uma surpresa!</strong> Um vídeo completo e muito bem feito.</span></p>
-        <p class="coment"><i aria-hidden="true">♥</i><span><strong>Foi um prazer!</strong> O processo foi muito profissional.</span></p>
-      </div>
+      <!-- Comentários de clientes: só a mensagem. Use <strong> para negrito. -->
+      <p class="flutua a"><span><strong>Amei demais, de verdade.</strong> Superou minhas expectativas. ❤️</span></p>
+      <p class="flutua b"><span>Seu conteúdo <strong>não para de vender</strong> e olha que nem rodamos tráfego ainda. Parabéns, arrasamos!</span></p>
+      <p class="flutua c"><span>O <strong>processo</strong> foi muito fluído e <strong>profissional</strong>. Já te indiquei pra outras marcas.</span></p>
     </div>
   </div>
   <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
@@ -598,18 +592,19 @@ const servicos = [
   { titulo: "Pacote mensal", texto: "Conteúdo recorrente todo mês, com condição especial e planejamento antecipado." }
 ];
 
-/* Depoimentos. metrica/metricaRotulo são opcionais (deixe "" para não mostrar) */
+/* Depoimentos: só as mensagens. Use <strong> para negrito */
 const depoimentos = [
-  { texto: "Vendemos 202 cursos no lançamento, foi um sucesso, considerando que tínhamos pouco mais de 750 pessoas no grupo.", nome: "Cliente 01", tag: "Marca 01 · lançamento de curso", metrica: "202", metricaRotulo: "cursos vendidos no lançamento" },
-  { texto: "Amei demais de verdade. Superou minhas expectativas.", nome: "Cliente 02", tag: "Marca 02 · storytelling e estética", metrica: "", metricaRotulo: "" },
-  { texto: "Pelos conteúdos maravilhosos, tô muito satisfeita mesmo! Espero que a gente cresça muito juntas.", nome: "Cliente 03", tag: "Marca 03 · foco no produto", metrica: "", metricaRotulo: "" },
-  { texto: "Melhor parceria! Estou muito satisfeita, confesso que não imaginei que seria tão fluído ter uma equipe de mkt.", nome: "Cliente 04", tag: "Marca 04 · campanha institucional", metrica: "", metricaRotulo: "" }
+  "<strong>Amei demais, de verdade.</strong> Superou minhas expectativas. ❤️",
+  "Seu conteúdo <strong>não para de vender</strong> e olha que nem rodamos tráfego ainda. Parabéns, arrasamos!",
+  "O <strong>processo</strong> foi muito fluído e <strong>profissional</strong>. Já te indiquei pra outras marcas.",
+  "Vendemos 202 cursos no lançamento, foi um sucesso, considerando que tínhamos pouco mais de 750 pessoas no grupo.",
+  "<strong>Foi uma surpresa!</strong> Um vídeo completo e muito bem feito.",
+  "Pelos conteúdos maravilhosos, tô muito satisfeita mesmo! Espero que a gente cresça muito juntas."
 ];
 
 /* ========================= CÓDIGO ========================= */
 const $ = s => document.querySelector(s);
 const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const ESTRELAS = '<span class="estrelas" role="img" aria-label="5 de 5 estrelas">★★★★★</span>';
 const pad = n => String(n).padStart(2, "0");
 
 $("#ano").textContent = new Date().getFullYear();
@@ -689,15 +684,7 @@ $("#passos").innerHTML = passos.map(p => `<article class="passo reveal"><b>${p.n
 $("#usos").innerHTML = usos.map(u => `<article class="uso reveal"><h3>${u.titulo}</h3><p>${u.texto}</p></article>`).join("");
 $("#servicos-lista").innerHTML = servicos.map((s, i) => `
   <article class="serv reveal"><span class="n">${pad(i + 1)}</span><h3>${s.titulo}</h3><p>${s.texto}</p></article>`).join("");
-$("#depoimentos-lista").innerHTML = depoimentos.map(d => `
-  <figure class="depo">
-    <div class="avatar" aria-hidden="true">${d.nome.replace(/\D/g, "") ? "C" + d.nome.replace(/\D/g, "") : d.nome.slice(0, 2)}</div>
-    <strong class="nome">${d.nome}</strong>
-    ${ESTRELAS}
-    <span class="tag">${d.tag}</span>
-    <blockquote>${d.texto}</blockquote>
-    ${d.metrica ? `<div class="fim"><b>${d.metrica}</b><span>${d.metricaRotulo}</span></div>` : ""}
-  </figure>`).join("");
+$("#depoimentos-lista").innerHTML = depoimentos.map(d => `<figure class="depo"><p>${d}</p></figure>`).join("");
 
 /* Setas dos carrosséis */
 function atualizarSetas(trilha){
