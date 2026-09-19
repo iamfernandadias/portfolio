@@ -83,10 +83,11 @@ h1 em,h2 em{font-size:1.1em}
 .ph{position:relative;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding:18px;color:#fff;font-weight:700;font-size:.85rem;background:linear-gradient(150deg,#cb6694,#e6b3cc 55%,#ebf094);border-radius:var(--raio-g);overflow:hidden;box-shadow:var(--sombra-g)}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ph small{position:relative;background:rgba(35,31,32,.85);padding:5px 12px;border-radius:999px;font-size:.78rem}
-.flutua{position:absolute;z-index:3;max-width:215px;margin:0;background:var(--lima);color:var(--ink);border-radius:16px 16px 16px 4px;padding:9px 14px;font-size:.78rem;line-height:1.4;box-shadow:0 6px 18px rgba(35,31,32,.12);opacity:0;animation:pop 14s ease-in-out infinite both}
+.flutua{position:absolute;z-index:3;width:max-content;max-width:206px;margin:0;background:var(--lima);color:var(--ink);border-radius:14px 14px 14px 3px;padding:7px 11px;font-size:.7rem;line-height:1.4;box-shadow:0 4px 12px rgba(35,31,32,.09);opacity:0;animation:pop 14s ease-in-out infinite both}
 .flutua strong{font-weight:800}
+.junto{white-space:nowrap}
 .flutua.a{right:-7%;top:8%;animation-delay:.6s}
-.flutua.b{left:-9%;top:46%;animation-delay:3.4s;border-radius:16px 16px 4px 16px}
+.flutua.b{left:-9%;top:46%;animation-delay:3.4s;border-radius:14px 14px 3px 14px}
 .flutua.c{right:-7%;bottom:9%;animation-delay:6.2s}
 @keyframes pop{0%{opacity:0;transform:translateY(14px) scale(.94)}4%,74%{opacity:1;transform:none}82%,100%{opacity:0;transform:translateY(-8px) scale(.98)}}
 
@@ -263,7 +264,7 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
   .menu a{display:block;padding:14px 4px;font-size:.8rem}
   .capa-grade,.sobre-grade,.contato-grade{grid-template-columns:1fr;gap:40px}
   .foto-capa{max-width:380px}
-  .flutua{max-width:165px;font-size:.72rem;padding:7px 11px}
+  .flutua{max-width:172px;font-size:.64rem;padding:6px 9px}
   .flutua.a{right:0;top:5%}.flutua.b{left:0;top:48%}.flutua.c{right:0;bottom:5%}
   .destaques{grid-template-columns:1fr;max-width:380px;margin-inline:auto}
   .resultados,.usos{grid-template-columns:1fr}
@@ -327,8 +328,8 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
       <!-- TROCAR A FOTO: substitua o arquivo fotos/capa.jpg (formato ideal 4:5) ou mude o caminho no src. -->
       <div class="ph"><img src="fotos/capa.jpg" alt="Fernanda Dias em Londres, sentada em um muro com o Big Ben ao fundo" width="1120" height="1400" fetchpriority="high"></div>
       <!-- Comentários de clientes: só a mensagem. Use <strong> para negrito. -->
-      <p class="flutua a"><span><strong>Amei demais, de verdade.</strong> Superou minhas expectativas. ❤️</span></p>
-      <p class="flutua b"><span>Seu conteúdo <strong>não para de vender</strong> e olha que nem rodamos tráfego ainda. Parabéns, arrasamos!</span></p>
+      <p class="flutua a"><span><strong>Amei demais, de verdade.</strong> <span class="junto">Superou minhas expectativas. ❤️</span></span></p>
+      <p class="flutua b"><span>Seu conteúdo <strong>não para de vender</strong> e olha que <strong>nem rodamos tráfego</strong> ainda. <span class="junto">Parabéns, arrasamos!</span></span></p>
       <p class="flutua c"><span>O <strong>processo</strong> foi muito fluído e <strong>profissional</strong>. Já te indiquei pra outras marcas.</span></p>
     </div>
   </div>
@@ -594,8 +595,8 @@ const servicos = [
 
 /* Depoimentos: só as mensagens. Use <strong> para negrito */
 const depoimentos = [
-  "<strong>Amei demais, de verdade.</strong> Superou minhas expectativas. ❤️",
-  "Seu conteúdo <strong>não para de vender</strong> e olha que nem rodamos tráfego ainda. Parabéns, arrasamos!",
+  "<strong>Amei demais, de verdade.</strong> <span class=\"junto\">Superou minhas expectativas. ❤️</span>",
+  "Seu conteúdo <strong>não para de vender</strong> e olha que <strong>nem rodamos tráfego</strong> ainda. <span class=\"junto\">Parabéns, arrasamos!</span>",
   "O <strong>processo</strong> foi muito fluído e <strong>profissional</strong>. Já te indiquei pra outras marcas.",
   "Vendemos 202 cursos no lançamento, foi um sucesso, considerando que tínhamos pouco mais de 750 pessoas no grupo.",
   "<strong>Foi uma surpresa!</strong> Um vídeo completo e muito bem feito.",
