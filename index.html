@@ -585,6 +585,7 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&a
 const nuvem = (typeof BANCO !== "undefined") ? BANCO : null;   /* dados do Supabase (js/banco.js) */
 const hojeLocal = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
 const frasesNicho = Object.fromEntries(nichos.map(n => [n.nome, n.frase]));
+const nichosFixos = nichos.slice(), trabalhosFixos = trabalhos.slice();   /* fotos da galeria: ficam sempre */
 
 $("#ano").textContent = new Date().getFullYear();
 $("#listaMarcas").innerHTML = marcas.map(m => `<li>${m}</li>`).join("");
@@ -772,15 +773,18 @@ function aplicarVideos(lista) {
                titulo: esc(v.titulo), contexto: esc([v.marca, v.formato].filter(Boolean).join(" · ")) };
     });
   }
-  /* vídeo em destaque sem nicho aparece só nos destaques, não na galeria por nicho */
-  const galeria = lista.filter(v => v.nicho || !v.destaque);
-  const nomes = [];
-  galeria.forEach(v => { const n = v.nicho || "Outros"; if (!nomes.includes(n)) nomes.push(n); });
-  nichos = nomes.map(n => ({ nome: esc(n), frase: frasesNicho[n] || "" }));
-  trabalhos = galeria.map(v => ({ titulo: esc(v.titulo), marca: esc(v.marca || ""), nicho: esc(v.nicho || "Outros"),
+  /* Galeria por nicho: as fotos fixas continuam, e os vídeos do painel que têm nicho entram somando.
+     Vídeo em destaque sem nicho aparece só nos destaques. */
+  const extras = lista.filter(v => v.nicho || !v.destaque).map(v => ({ titulo: esc(v.titulo), marca: esc(v.marca || ""), nicho: esc(v.nicho || "Outros"),
                                   imagem: esc(v.capa || ""), link: urlSegura(v.link), video: (v.formato || "") !== "Foto" }));
+  if (extras.length) {
+    const novosNichos = [];
+    extras.forEach(t => { if (!nichosFixos.some(n => n.nome === t.nicho) && !novosNichos.includes(t.nicho)) novosNichos.push(t.nicho); });
+    nichos = nichosFixos.concat(novosNichos.map(n => ({ nome: n, frase: frasesNicho[n] || "" })));
+    trabalhos = trabalhosFixos.concat(extras);
+    desenharTrabalhos();
+  }
   desenharDestaques();
-  desenharTrabalhos();
   observarNovos();
 }
 async function carregarVideos() {
