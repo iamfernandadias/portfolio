@@ -166,6 +166,8 @@ section.stats-sec{padding-block:40px 24px}
 .produto h4{font-size:.98rem;line-height:1.25;font-weight:800;letter-spacing:-.01em}
 .contratar{display:inline-block;margin-top:10px;font-weight:800;font-size:.85rem;color:var(--rosa-esc);text-decoration:none}
 .contratar:hover{text-decoration:underline}
+.produto .play{width:46px;height:46px}
+.produto .play::before{border-left-width:14px;border-block-width:9px;margin-left:3px}
 
 /* Como funciona */
 .fluxo-grade{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start}
@@ -472,11 +474,15 @@ footer.rodape{background:var(--ink);color:var(--bg);border-top:1px solid rgba(24
 </footer>
 
 
+<script src="js/banco.js"></script>
 <script>
 /* ==========================================================
    DADOS EDITÁVEIS. Mexa só aqui para trocar textos e números.
    Onde aparece "00" ou "Marca 04" etc., é placeholder.
    ========================================================== */
+
+/* IMPORTANTE: os destaques (3 vídeos) e os trabalhos por nicho abaixo são o conteúdo RESERVA.
+   Assim que existir pelo menos 1 vídeo visível no painel (admin), o site passa a mostrar os vídeos do painel. */
 
 /* Marcas (as 3 primeiras são reais, o resto é placeholder) */
 const marcas = ["Ge Beauty","Olera","Club Etc","Marca 04","Marca 05","Marca 06","Marca 07","Marca 08"];
@@ -495,7 +501,7 @@ const metricas = [
 /* Conteúdos de destaque.
    link = endereço do vídeo (já com os seus reels)
    capa = imagem de capa 9:16, ex: "fotos/capa1.jpg" (deixe "" para mostrar o degradê) */
-const destaques = [
+let destaques = [
   { link: "https://www.instagram.com/reel/DUGSDGVjTmV/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==",
     capa: "", numero: "+0,0M", rotulo: "views no reels",
     titulo: "Título do conteúdo 01", contexto: "Marca 01 · uma linha sobre o contexto do vídeo" },
@@ -515,7 +521,7 @@ const resultados = [
 ];
 
 /* Nichos (uma linha da galeria por nicho). O nome precisa ser igual ao usado em "nicho" nos trabalhos */
-const nichos = [
+let nichos = [
   { nome: "Skincare", frase: "Cuidados que viram rotina" },
   { nome: "Casa e decoração", frase: "Ambientes com a sua cara" },
   { nome: "Fitness", frase: "Movimento que vira hábito" },
@@ -523,7 +529,7 @@ const nichos = [
 ];
 
 /* Trabalhos. imagem = "fotos/arquivo.jpg" (deixe "" para mostrar o degradê) */
-const trabalhos = [
+let trabalhos = [
   { titulo: "Cuidados com cabelo e pele", marca: "Ge Beauty", nicho: "Skincare", imagem: "fotos/skincare-1.jpg" },
   { titulo: "Vitaminas na rotina", marca: "Marca 02", nicho: "Skincare", imagem: "fotos/skincare-2.jpg" },
   { titulo: "Cantinho renovado", marca: "Marca 03", nicho: "Casa e decoração", imagem: "" },
@@ -575,6 +581,10 @@ const depoimentos = [
 const $ = s => document.querySelector(s);
 const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const pad = n => String(n).padStart(2, "0");
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]));
+const nuvem = (typeof BANCO !== "undefined") ? BANCO : null;   /* dados do Supabase (js/banco.js) */
+const hojeLocal = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+const frasesNicho = Object.fromEntries(nichos.map(n => [n.nome, n.frase]));
 
 $("#ano").textContent = new Date().getFullYear();
 $("#listaMarcas").innerHTML = marcas.map(m => `<li>${m}</li>`).join("");
@@ -591,6 +601,7 @@ $("#metricas").innerHTML = metricas.map(m => `
   <div class="stat reveal"><strong ${m.valor === null ? "" : `data-alvo="${m.valor}" data-pre="${m.prefixo}" data-suf="${m.sufixo}"`}>${m.valor === null ? "00" : m.prefixo + (reduzir ? m.valor : 0) + m.sufixo}</strong><span>${m.rotulo}</span></div>`).join("");
 
 /* Destaques: link do vídeo entra em href; capa entra na tag img */
+function desenharDestaques() {
 $("#destaques-lista").innerHTML = destaques.map(d => `
   <a class="dest reveal" href="${d.link}" target="_blank" rel="noopener" aria-label="Assistir: ${d.titulo}">
     <div class="ph dest-capa">
@@ -605,10 +616,13 @@ $("#destaques-lista").innerHTML = destaques.map(d => `
       <p>${d.contexto}</p>
     </div>
   </a>`).join("");
+}
+desenharDestaques();
 $("#resultados").innerHTML = resultados.map(r => `
   <div class="result reveal"><strong>${r.numero}</strong><b>${r.titulo}</b><p>${r.texto}</p></div>`).join("");
 
 /* Trabalhos: uma linha por nicho, com filtro */
+function desenharTrabalhos() {
 $("#filtros").innerHTML = ["Todos", ...nichos.map(n => n.nome)].map((n, i) =>
   `<button class="filtro" type="button" data-nicho="${n}" aria-pressed="${i === 0}">${n}</button>`).join("");
 $("#linhas").innerHTML = nichos.map((n, i) => {
@@ -625,18 +639,21 @@ $("#linhas").innerHTML = nichos.map((n, i) => {
     <div class="trilha" id="trilha-${i}" tabindex="0" aria-label="Trabalhos de ${n.nome}">
       ${itens.map(t => `
       <article class="produto">
-        <div class="ph" ${t.imagem ? "" : `role="img" aria-label="Espaço para imagem do trabalho ${t.titulo}"`}>
-          ${t.imagem ? `<img src="${t.imagem}" alt="${t.titulo} para ${t.marca}" width="400" height="500" loading="lazy">` : "<small>foto do trabalho 4:5</small>"}
+        <div class="ph" ${t.imagem || t.video ? "" : `role="img" aria-label="Espaço para imagem do trabalho ${t.titulo}"`}>
+          ${t.imagem ? `<img src="${t.imagem}" alt="${t.titulo}${t.marca ? " para " + t.marca : ""}" width="400" height="500" loading="lazy">` : (t.video ? `<span class="play" aria-hidden="true"></span>` : "<small>foto do trabalho 4:5</small>")}
         </div>
         <div class="prod-corpo">
-          <span class="marca-tag">${t.marca}</span>
+          ${t.marca ? `<span class="marca-tag">${t.marca}</span>` : ""}
           <h4>${t.titulo}</h4>
-          <a class="contratar" href="#contato" data-contratar="${t.titulo}">contratar →</a>
+          ${t.link ? `<a class="contratar" href="${t.link}" target="_blank" rel="noopener">assistir →</a>` : `<a class="contratar" href="#contato" data-contratar="${t.titulo}">contratar →</a>`}
         </div>
       </article>`).join("")}
     </div>
   </div>`;
 }).join("");
+ligarSetas($("#linhas"));
+}
+desenharTrabalhos();
 
 $("#filtros").addEventListener("click", e => {
   const b = e.target.closest(".filtro"); if (!b) return;
@@ -666,7 +683,10 @@ document.addEventListener("click", e => {
   const t = document.getElementById(b.dataset.alvo);
   t.scrollBy({ left: +b.dataset.dir * t.clientWidth * .8, behavior: reduzir ? "auto" : "smooth" });
 });
-document.querySelectorAll(".trilha,.depoimentos").forEach(t => { t.addEventListener("scroll", () => atualizarSetas(t), { passive: true }); atualizarSetas(t); });
+function ligarSetas(escopo) {
+  escopo.querySelectorAll(".trilha,.depoimentos").forEach(t => { t.addEventListener("scroll", () => atualizarSetas(t), { passive: true }); atualizarSetas(t); });
+}
+ligarSetas(document.querySelector("#depoimentos-lista").parentNode);
 window.addEventListener("resize", () => document.querySelectorAll(".trilha,.depoimentos").forEach(atualizarSetas));
 
 /* Menu sanduíche */
@@ -699,18 +719,116 @@ const obs = new IntersectionObserver(entradas => {
     obs.unobserve(en.target);
   });
 }, { threshold: .15 });
-document.querySelectorAll(".reveal").forEach(el => reduzir ? el.classList.add("on") : obs.observe(el));
+function observarNovos() { document.querySelectorAll(".reveal:not(.on)").forEach(el => reduzir ? el.classList.add("on") : obs.observe(el)); }
+observarNovos();
 
-/* Formulário de contato (para receber de verdade, troque por um serviço como Formspree) */
-$("#form").addEventListener("submit", e => {
+/* Formulário de contato: grava na tabela "marcas" do painel, como situação "lead" */
+$("#form").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target;
   if (!f.checkValidity()) { f.reportValidity(); return; }
-  const nome = f.nome.value.trim().split(" ")[0];
   const ok = $("#confirma");
-  ok.textContent = `Obrigada, ${nome}! Recebi sua mensagem e respondo em breve.`;
-  ok.hidden = false; f.hidden = true; ok.setAttribute("tabindex","-1"); ok.focus();
+  const botao = f.querySelector('[type="submit"]');
+  const textoBotao = botao.textContent;
+  botao.disabled = true; botao.textContent = "Enviando...";
+  ok.hidden = true;
+  let enviado = false;
+  if (nuvem) {
+    try {
+      const r = await fetch(nuvem.url + "/rest/v1/marcas", {
+        method: "POST",
+        headers: { apikey: nuvem.chave, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({
+          nome: f.nome.value.trim().slice(0, 200),
+          email: f.email.value.trim().slice(0, 200),
+          obs: f.mensagem.value.trim().slice(0, 3000),
+          situacao: "lead",
+          ultimo_contato: hojeLocal()
+        })
+      });
+      enviado = r.ok;
+    } catch (erro) { enviado = false; }
+  }
+  botao.disabled = false; botao.textContent = textoBotao;
+  if (enviado) {
+    const nome = f.nome.value.trim().split(" ")[0];
+    ok.textContent = `Obrigada, ${nome}! Recebi sua mensagem e respondo em breve.`;
+    ok.hidden = false; f.hidden = true; ok.setAttribute("tabindex", "-1"); ok.focus();
+  } else {
+    ok.textContent = "Não consegui enviar agora. Me chame pelo WhatsApp ou por e-mail, os botões estão aqui ao lado.";
+    ok.hidden = false;
+  }
 });
+
+/* Vídeos do painel: troca o conteúdo reserva pelos vídeos da tabela "videos" (só os visíveis) */
+function urlSegura(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+function aplicarVideos(lista) {
+  const comDestaque = lista.filter(v => v.destaque && urlSegura(v.link)).slice(0, 3);
+  if (comDestaque.length) {
+    destaques = comDestaque.map(v => {
+      const partes = String(v.destaque).trim().split(/\s+/);
+      const numero = partes.shift();
+      return { link: urlSegura(v.link), capa: esc(v.capa || ""), numero: esc(numero), rotulo: esc(partes.join(" ") || "views"),
+               titulo: esc(v.titulo), contexto: esc([v.marca, v.formato].filter(Boolean).join(" · ")) };
+    });
+  }
+  /* vídeo em destaque sem nicho aparece só nos destaques, não na galeria por nicho */
+  const galeria = lista.filter(v => v.nicho || !v.destaque);
+  const nomes = [];
+  galeria.forEach(v => { const n = v.nicho || "Outros"; if (!nomes.includes(n)) nomes.push(n); });
+  nichos = nomes.map(n => ({ nome: esc(n), frase: frasesNicho[n] || "" }));
+  trabalhos = galeria.map(v => ({ titulo: esc(v.titulo), marca: esc(v.marca || ""), nicho: esc(v.nicho || "Outros"),
+                                  imagem: esc(v.capa || ""), link: urlSegura(v.link), video: (v.formato || "") !== "Foto" }));
+  desenharDestaques();
+  desenharTrabalhos();
+  observarNovos();
+}
+async function carregarVideos() {
+  if (!nuvem) return;
+  try {
+    const r = await fetch(nuvem.url + "/rest/v1/rpc/videos_publicos", {
+      method: "POST", headers: { apikey: nuvem.chave, "Content-Type": "application/json" }, body: "{}"
+    });
+    if (!r.ok) return;
+    const lista = await r.json();
+    if (Array.isArray(lista) && lista.length) aplicarVideos(lista);
+  } catch (erro) { /* sem internet ou painel fora do ar: fica o conteúdo reserva */ }
+}
+carregarVideos();
+
+/* Registro simples de visita: uma por sessão, sem cookie, sem serviço de fora e sem pedir nada ao visitante.
+   Suas próprias visitas: abra o site uma vez com ?nao_contar no final do endereço e este navegador para de contar. */
+(function registrarVisita() {
+  try {
+    if (!nuvem) return;
+    const host = location.hostname;
+    if (host === "localhost" || host === "127.0.0.1" || host === "") return;
+    if (/[?&]nao_contar/.test(location.search)) localStorage.setItem("naoContar", "1");
+    if (localStorage.getItem("naoContar")) return;
+    if (sessionStorage.getItem("visitaRegistrada")) return;
+    sessionStorage.setItem("visitaRegistrada", "1");
+    const p = new URLSearchParams(location.search);
+    let origem = p.get("utm_source") || p.get("origem") || "";
+    if (!origem && document.referrer) {
+      try { const h = new URL(document.referrer).hostname.replace(/^www\./, ""); if (h !== host) origem = h; } catch (erro) {}
+    }
+    const o = origem.toLowerCase();
+    if (!o) origem = "Direto";
+    else if (o.includes("instagram")) origem = "Instagram";
+    else if (o.includes("whatsapp") || o.includes("wa.me")) origem = "WhatsApp";
+    else if (o.includes("google")) origem = "Google";
+    else if (o.includes("facebook") || o.includes("fb.")) origem = "Facebook";
+    else if (o.includes("tiktok")) origem = "TikTok";
+    else if (o.includes("youtube")) origem = "YouTube";
+    else if (o.includes("linkedin")) origem = "LinkedIn";
+    else origem = origem.slice(0, 60);
+    fetch(nuvem.url + "/rest/v1/visitas", {
+      method: "POST", keepalive: true,
+      headers: { apikey: nuvem.chave, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ data: hojeLocal(), pagina: location.pathname.slice(0, 200), origem })
+    }).catch(() => {});
+  } catch (erro) { /* se o navegador bloquear o armazenamento, simplesmente não conta */ }
+})();
 
 document.addEventListener("keydown", e => { if (e.key === "Escape") fecharMenu(); });
 </script>
